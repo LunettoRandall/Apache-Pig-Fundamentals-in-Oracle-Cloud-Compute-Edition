@@ -45,8 +45,35 @@
 
   STORE specific_columns INTO 'output/specific_columns' USING PigStorage(',');
   
+# ***REFER TO OUTPUT.SH FILE IN REPO*** #
 
+# PERFORM A JOIN BETWEEN 2 RELATIONS
+# perform a join on two driver statistics data sets: truck_event_text_partition.csv and the driver.csv files. 
+# Drivers.csv has all the details for the driver like driverId, name, ssn, location, etc.
+
+# Create a new Pig script named "Pig-Join"
+# Define a new relation named drivers then join truck_events and drivers by driverId and describe the schema of the new relation join_data.
+
+  drivers = LOAD '/user/rlunett/drivers.csv' USING PigStorage(',') 
+  AS (driverId:int, name:chararray, ssn:chararray, location:chararray, certified:chararray, wage_plan:chararray);
   
+  join_data = JOIN truck_events BY (driverId), drivers BY (driverId);
   
-
-
+  DESCRIBE join_data;
+  
+# SORT THE DATA USING “ORDER BY”
+  
+  ordered_data = ORDER drivers BY name asc;
+  DUMP ordered_data;
+  
+# FILTER AND GROUP THE DATA USING “GROUP BY”
+# Create a new Pig script named "Pig-Group". 
+# Group the truck_events relation by the driverId for the eventType which are not ‘Normal’.
+  
+  filtered_events = FILTER truck_events BY NOT (eventType MATCHES 'Normal');
+  
+  grouped_events = GROUP filtered_events BY driverId;
+  
+  DESCRIBE grouped_events;
+  
+  DUMP grouped_events;
