@@ -46,6 +46,7 @@
   STORE specific_columns INTO 'output/specific_columns' USING PigStorage(',');
   
 # ***REFER TO OUTPUT.SH FILE IN REPO*** #
+hdfs dfs -cat output/specific_columns/part-r-00000 | head
 
 # PERFORM A JOIN BETWEEN 2 RELATIONS
 # perform a join on two driver statistics data sets: truck_event_text_partition.csv and the driver.csv files. 
